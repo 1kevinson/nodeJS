@@ -6,6 +6,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+//Rendering views on server-side
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 // First middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -17,13 +21,9 @@ app.use((request, response, next) => {
 
 app.use((request, response, next) => {
   let userName = request.body.username || "unknown user";
-  response.send(
-    `<h1>Hi ${userName}</h1>` +
-      "<form method='post' action='/'>" +
-      "<input name='username' type='text'>" +
-      "<button type='submit'> Send </button>" +
-      "</form>"
-  );
+  response.render("index", {
+    user: userName,
+  });
 });
 
 app.listen(3000);
