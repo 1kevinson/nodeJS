@@ -1,0 +1,30 @@
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  let body = [];
+
+  //start reading the request
+  req.on("data", (chunk) => {
+    body.push(chunk);
+  });
+  //end reading the request
+  req.on("end", () => {
+    body = Buffer.concat(body).toString();
+    let userName = "unknown user";
+    if (body) {
+      userName = body.split("=")[1];
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.write(
+      `<h1>Hi ${userName}</h1>` +
+        "<form method='post' action='/'>" +
+        "<input name='username' type='text'>" +
+        "<button type='submit'> Send </button>" +
+        "</form>"
+    );
+    res.end();
+  });
+});
+
+server.listen(3000);
